@@ -1,6 +1,8 @@
-const tasks = [];
-
 document.addEventListener('DOMContentLoaded', renderRoot);
+document.addEventListener('DOMContentLoaded', checkStorage);
+
+
+// localStorage.clear();
 
 function renderRoot() {
   ///////////////////////////
@@ -24,7 +26,10 @@ function renderRoot() {
   inputField.setAttribute('type', 'text');
   inputField.setAttribute('placeholder', 'Title...');
 
-  inputButton.addEventListener('click', addTask);
+  inputButton.addEventListener('click', function() {
+    const input = this.previousElementSibling.value;
+    addTask(input);
+  });
   inputButton.textContent = 'Add';
 
   // Tasks container
@@ -71,16 +76,26 @@ function renderRoot() {
   document.getElementById('root').appendChild(toDoList);
 }
 
-function addTask() {
-  // Getting text from input-field
-  let input = document.getElementById('input').textContent;
 
+function addTask(input) {
+  const task = createTask(input)['task'];
+  task.setAttribute('id', Date.now());
+
+  // Updating localStorage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.push({'id': task['id'], 'desc': input.toString(), 'createdAt': new Date().toISOString()});
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  
+  renderTask(task);
+}
+
+function createTask(input) {
   let task = document.createElement('li');
   task.classList.add('task');
 
   let description = document.createElement('span');
   description.classList.add('description');
-  description.textContent = 'description';
+  description.textContent = input;
 
   let removeButton = document.createElement('button');
   removeButton.classList.add('remove-button');
@@ -88,28 +103,51 @@ function addTask() {
     removeTask(this) 
   });
 
-  // Adding this task to array
-  const id = Date.now();
-  task.setAttribute('id', id);
-  tasks.push({id: id, desc: description, createdAt: new Date().toISOString()});
-
-  // Composing
   task.appendChild(description);
   task.appendChild(removeButton);
-  document.getElementById('task-list').appendChild(task);
 
+  return {
+    'task': task,
+    'desc': input.toString()
+  };
+}
+
+function renderTask(task) {
+  document.getElementById('task-list').appendChild(task);
 }
 function removeTask(button) {
   const task = button.parentElement;
   document.getElementById('task-list').removeChild(task);
+
+  // Updating localStorage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   tasks.splice(tasks.findIndex(findID), 1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 
   function findID(obj) {
-    return obj.id === task.id;
+    return obj['id'] === task.id;
   }
 }
 
+function renderTasks(tasks) {
+  const taskList = document.getElementById('task-list');
+  tasks.forEach(task => {
+    const currentTask = createTask(task['desc']);
+    currentTask['task'].setAttribute('id', task.id);
+    currentTask['task'].firstElementChild.textContent = currentTask['desc'];
+    renderTask(currentTask['task']);
+    console.log('ren');
+  })
+}
 
+
+function checkStorage() {
+  const storedTasks = localStorage.getItem('tasks');
+  if (storedTasks) {
+    let parsedTasks = JSON.parse(storedTasks);
+    renderTasks(parsedTasks);
+  }
+}
 
 function sortTasks(order) {
 
