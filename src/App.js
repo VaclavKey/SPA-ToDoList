@@ -1,10 +1,12 @@
+import _ from 'lodash';
+
 // Onload listeners
 document.addEventListener('DOMContentLoaded', () => {
-  renderRoot();
+  renderApp();
   checkStorage();
 });
 
-function renderRoot() {
+function renderApp() {
   ///////////////////////////
   // Initializing elements //
   ///////////////////////////
@@ -82,7 +84,7 @@ function renderRoot() {
   toDoList.appendChild(taskSortButtons);
 
   // Composing whole document
-  document.getElementById('root').appendChild(toDoList);
+  document.getElementById('app').appendChild(toDoList);
 }
 function addTask(desc) {
   // Creating HTML-Element
