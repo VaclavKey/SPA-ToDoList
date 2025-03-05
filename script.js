@@ -1,6 +1,8 @@
 // Onload listeners
-document.addEventListener('DOMContentLoaded', renderRoot);
-document.addEventListener('DOMContentLoaded', checkStorage);
+document.addEventListener('DOMContentLoaded', () => {
+  renderRoot();
+  checkStorage();
+});
 
 function renderRoot() {
   ///////////////////////////
@@ -25,8 +27,17 @@ function renderRoot() {
   inputField.setAttribute('placeholder', 'Title...');
 
   inputButton.addEventListener('click', function() {
-    const input = this.previousElementSibling.value;
+    // Getting input-field via siblings of button
+    const inputField = this.previousElementSibling;
+    // Deleting outer spaces
+    const input = inputField.value.trim();
+
+    if (!input) return;
+    
     addTask(input);
+    
+    // Clear input-field after adding task
+    inputField.value = '';
   });
   inputButton.textContent = 'Add';
 
@@ -73,21 +84,21 @@ function renderRoot() {
   // Composing whole document
   document.getElementById('root').appendChild(toDoList);
 }
-function addTask(input) {
+function addTask(desc) {
   // Creating HTML-Element
-  const task = createTask(input)['task'];
+  const task = createTask(desc)['task'];
   // Setting unique ID
   task.setAttribute('id', Date.now());
 
   // Updating localStorage
   const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks.push({'id': task['id'], 'desc': input.toString(), 'createdAt': new Date().toISOString()});
+  tasks.push({'id': task['id'], 'desc': desc.toString(), 'createdAt': new Date().toISOString()});
   localStorage.setItem('tasks', JSON.stringify(tasks));
   
   // Rendering element in HTML
   renderTask(task);
 }
-function createTask(input) {
+function createTask(desc) {
   // Creating list-container for task
   let task = document.createElement('li');
   task.classList.add('task');
@@ -95,7 +106,7 @@ function createTask(input) {
   // Creating span with desctiption of task
   let description = document.createElement('span');
   description.classList.add('description');
-  description.textContent = input;
+  description.textContent = desc;
   
   // Creating button to delete task
   let removeButton = document.createElement('button');
@@ -110,7 +121,7 @@ function createTask(input) {
 
   return {
     'task': task,
-    'desc': input.toString()
+    'desc': desc.toString()
   };
 }
 function renderTask(task) {
@@ -138,8 +149,6 @@ function renderTasks(tasks) {
     const currentTask = createTask(task['desc']);
     // Setting ID. Also from localStorage
     currentTask['task'].setAttribute('id', task.id);
-    // Setting task's description-span with localStoraged description
-    currentTask['task'].firstElementChild.textContent = currentTask['desc'];
     // Appending composed task to task-list
     renderTask(currentTask['task']);
   })
@@ -158,12 +167,14 @@ function sortTasks(order) {
 
   tasks.sort((a, b) => {
     return order === 'new'
-    ? new Date(b.createdAt) - new Date(a.createdAt)
-    : new Date(a.createdAt) - new Date(b.createdAt)
+    ? new Date(b.createdAt) - new Date(a.createdAt) // Sorting by newest
+    : new Date(a.createdAt) - new Date(b.createdAt) // Sorting by oldest
   });
 
-  taskList.innerHTML = '';
+  // Saving in localStorage to make list stay sorted after page reloading
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 
+  taskList.innerHTML = '';
   renderTasks(tasks);
 }
 
