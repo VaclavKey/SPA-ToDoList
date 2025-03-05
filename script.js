@@ -1,6 +1,8 @@
-const tasks = [];
 document.addEventListener('DOMContentLoaded', renderRoot);
 document.addEventListener('DOMContentLoaded', checkStorage);
+
+
+// localStorage.clear();
 
 function renderRoot() {
   ///////////////////////////
@@ -75,13 +77,19 @@ function renderRoot() {
 }
 
 
-function addTask() {
+function addTask(input) {
+  const task = createTask(input)['task'];
+  task.setAttribute('id', Date.now());
 
+  // Updating localStorage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.push({'id': task['id'], 'desc': input.toString(), 'createdAt': new Date().toISOString()});
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  
+  renderTask(task);
 }
 
-function renderTask(input) {
-  // Getting text from input-field
-
+function createTask(input) {
   let task = document.createElement('li');
   task.classList.add('task');
 
@@ -95,45 +103,39 @@ function renderTask(input) {
     removeTask(this) 
   });
 
-  // Adding this task to array
-  const id = Date.now();
-  task.setAttribute('id', id);
-
-  // Updating localStorage
-
-  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-  tasks.push({id: id, desc: description, createdAt: new Date().toISOString()});
-
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-
-  // Composing
   task.appendChild(description);
   task.appendChild(removeButton);
-  document.getElementById('task-list').appendChild(task);
+
+  return {
+    'task': task,
+    'desc': input.toString()
+  };
 }
 
+function renderTask(task) {
+  document.getElementById('task-list').appendChild(task);
+}
 function removeTask(button) {
   const task = button.parentElement;
   document.getElementById('task-list').removeChild(task);
 
   // Updating localStorage
-
   const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
   tasks.splice(tasks.findIndex(findID), 1);
-
   localStorage.setItem('tasks', JSON.stringify(tasks));
 
   function findID(obj) {
-    return obj.id === task.id;
+    return obj['id'] === task.id;
   }
 }
 
 function renderTasks(tasks) {
   const taskList = document.getElementById('task-list');
   tasks.forEach(task => {
-    addTask(task.desc);
+    const currentTask = createTask(task['desc']);
+    currentTask['task'].setAttribute('id', task.id);
+    currentTask['task'].firstElementChild.textContent = currentTask['desc'];
+    renderTask(currentTask['task']);
     console.log('ren');
   })
 }
