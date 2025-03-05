@@ -1,6 +1,6 @@
-const tasks = [];
-
+// Onload listeners
 document.addEventListener('DOMContentLoaded', renderRoot);
+document.addEventListener('DOMContentLoaded', checkStorage);
 
 function renderRoot() {
   ///////////////////////////
@@ -24,7 +24,10 @@ function renderRoot() {
   inputField.setAttribute('type', 'text');
   inputField.setAttribute('placeholder', 'Title...');
 
-  inputButton.addEventListener('click', addTask);
+  inputButton.addEventListener('click', function() {
+    const input = this.previousElementSibling.value;
+    addTask(input);
+  });
   inputButton.textContent = 'Add';
 
   // Tasks container
@@ -51,7 +54,7 @@ function renderRoot() {
   sortButtonOld.textContent = 'Oldest';
 
   ////////////////////////
-  // Appending elements //
+  // Composing elements //
   ////////////////////////
 
   // Composing input
@@ -70,47 +73,97 @@ function renderRoot() {
   // Composing whole document
   document.getElementById('root').appendChild(toDoList);
 }
+function addTask(input) {
+  // Creating HTML-Element
+  const task = createTask(input)['task'];
+  // Setting unique ID
+  task.setAttribute('id', Date.now());
 
-function addTask() {
-  // Getting text from input-field
-  let input = document.getElementById('input').textContent;
-
+  // Updating localStorage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.push({'id': task['id'], 'desc': input.toString(), 'createdAt': new Date().toISOString()});
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  
+  // Rendering element in HTML
+  renderTask(task);
+}
+function createTask(input) {
+  // Creating list-container for task
   let task = document.createElement('li');
   task.classList.add('task');
 
+  // Creating span with desctiption of task
   let description = document.createElement('span');
   description.classList.add('description');
-  description.textContent = 'description';
-
+  description.textContent = input;
+  
+  // Creating button to delete task
   let removeButton = document.createElement('button');
   removeButton.classList.add('remove-button');
   removeButton.addEventListener('click', function () { 
     removeTask(this) 
   });
 
-  // Adding this task to array
-  const id = Date.now();
-  task.setAttribute('id', id);
-  tasks.push({id: id, desc: description, createdAt: new Date().toISOString()});
-
-  // Composing
+  // Composing task
   task.appendChild(description);
   task.appendChild(removeButton);
-  document.getElementById('task-list').appendChild(task);
 
+  return {
+    'task': task,
+    'desc': input.toString()
+  };
+}
+function renderTask(task) {
+  document.getElementById('task-list').appendChild(task);
 }
 function removeTask(button) {
+  // Getting task via remove-button appended to task
   const task = button.parentElement;
   document.getElementById('task-list').removeChild(task);
-  tasks.splice(tasks.findIndex(findID), 1);
 
+  // Updating localStorage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.splice(tasks.findIndex(findID), 1);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  // Searching compared ID in localStorage tasks
   function findID(obj) {
-    return obj.id === task.id;
+    return obj['id'] === task.id;
   }
 }
-
-
-
-function sortTasks(order) {
-
+function renderTasks(tasks) {
+  const taskList = document.getElementById('task-list');
+  tasks.forEach(task => {
+    // Creating HTML-Element with localStoraged task
+    const currentTask = createTask(task['desc']);
+    // Setting ID. Also from localStorage
+    currentTask['task'].setAttribute('id', task.id);
+    // Setting task's description-span with localStoraged description
+    currentTask['task'].firstElementChild.textContent = currentTask['desc'];
+    // Appending composed task to task-list
+    renderTask(currentTask['task']);
+  })
 }
+function checkStorage() {
+  const storedTasks = localStorage.getItem('tasks');
+  // If localStorage isn't empty - render tasks from it
+  if (storedTasks) {
+    let parsedTasks = JSON.parse(storedTasks);
+    renderTasks(parsedTasks);
+  }
+}
+function sortTasks(order) {
+  const taskList = document.getElementById('task-list');
+  const tasks = JSON.parse(localStorage.getItem('tasks'));
+
+  tasks.sort((a, b) => {
+    return order === 'new'
+    ? new Date(b.createdAt) - new Date(a.createdAt)
+    : new Date(a.createdAt) - new Date(b.createdAt)
+  });
+
+  taskList.innerHTML = '';
+
+  renderTasks(tasks);
+}
+
