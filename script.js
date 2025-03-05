@@ -134,13 +134,8 @@ function removeTask(button) {
 
   // Updating localStorage
   const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks.splice(tasks.findIndex(findID), 1);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-
-  // Searching compared ID in localStorage tasks
-  function findID(obj) {
-    return obj['id'] === task.id;
-  }
+  const updatedTasks = tasks.filter(obj => obj.id !== task.id);
+  localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 }
 function renderTasks(tasks) {
   const taskList = document.getElementById('task-list');
