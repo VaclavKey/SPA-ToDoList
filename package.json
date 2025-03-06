@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "remix build && vite build",   // объединенная команда для сборки
+    "build": "remix build && vite build",
     "preview": "vite preview",
     "remix:build": "remix build",
     "vite:build": "vite build"
