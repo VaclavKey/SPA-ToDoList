@@ -15,6 +15,9 @@
 
 ## Установка и запуск  
 
+Вы можете сразу попробовать приложение по ссылке:  
+👉 [todolist-demo.netlify.app](https://todolist-demo.netlify.app)  
+
 1. Клонируйте репозиторий:
    ```bash
    git clone https://github.com/your-username/todolist.git
