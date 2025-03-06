@@ -3,7 +3,7 @@ $listBackgroundColor: #F8E46B;
 $taskBackgroundColor: #3E3D2E;
 $borderColor: #3E3D2E;
 $buttonColor: #3E3D2E;
-$shadowColor: #000000aa;
+$shadowBoxColor: #000000aa;
 
 @mixin flex {
   display: flex;
@@ -15,36 +15,40 @@ $shadowColor: #000000aa;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
   color: white;
 }
-
 html {
   overflow: hidden;
 }
 #app {
   @include flex;
   justify-content: center;
+  overflow: hidden;
   height: 100vh;
   background: radial-gradient(at 49vh 51vh, $mainBackgroundColor, black);
-  overflow: hidden;
 }
 .to-do-list {
   position: absolute;
-  right: 15%;
   height: 60vh;
+  right: 15%;
   border: 2px solid $borderColor;
   outline: 1px solid $borderColor;
   background-color: $listBackgroundColor;
-  box-shadow: 25px 35px 10px $shadowColor;
+  box-shadow: 25px 35px 10px $shadowBoxColor;
 }
 .task-input {
-  width: 30vw;
+  width: 100%;
   height: 12%;
+  background-color: $buttonColor;
 }
 .input-field {
   width: 70%;
   height: 100%;
   text-align: center;
+  font-size: 1.6em;
   background-color: $buttonColor;
 }
 .input-field::placeholder {
@@ -53,12 +57,15 @@ html {
 .input-button {
   width: 30%;
   height: 100%;
+  font-size: 1.6em;
 }
 .tasks-container {
   width: 100%;
   height: 80%;
-  padding: 1em;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: $listBackgroundColor $borderColor;
+  padding: 1em;
   border-top: 2px solid $borderColor;
   border-bottom: 2px solid $borderColor;
 }
@@ -71,17 +78,20 @@ html {
   flex-direction: row;
   width: 100%;
   height: 3rem;
-  box-shadow: inset -2px -2px $borderColor, inset 2px 2px $borderColor, inset -4px -4px gray, inset 4px 4px black;
   background-color: $taskBackgroundColor;
+  box-shadow: inset -2px -2px $borderColor, inset 2px 2px $borderColor, inset -4px -4px gray, inset 4px 4px black;
 }
 .description {
-  width: 90%;
+  width: 25vw;
   margin-left: 0.5em;
   font-size: 1.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .remove-button {
   width: 3rem;
   height: 100%;
+  font-size: 1.5em;
 }
 .task-sort-buttons {
   width: 100%;
@@ -90,6 +100,7 @@ html {
 .sort-button {
   width: 50%;
   height: 100%;
+  font-size: 1.5em;
 }
 .input-button, .sort-button, .remove-button {
   background-color: $buttonColor;
@@ -100,21 +111,19 @@ html {
 }
 
 .the-sun{
-  animation: rotate 10s linear infinite;
+  position: absolute;
+  top: 35vh;
+  left: 37vh;
   width: 28vh;
   height: 28vh;  
-  top: 35vh;
-  left: 37vh;
-  position: absolute;
+  animation: rotate 10s linear infinite;
 }
-
-
 .js-logo {
   position: absolute;
-  width: 28vh;
-  height: 28vh;
   top: 35vh;
   left: 37vh;
+  width: 28vh;
+  height: 28vh;
   z-index: 1;
 }
 .aureole {
