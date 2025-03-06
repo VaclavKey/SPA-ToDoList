@@ -1,9 +1,9 @@
 $mainBackgroundColor: #F3E47A;
-$listBackgroundColor: #F0DC4E;
+$listBackgroundColor: #F8E46B;
 $taskBackgroundColor: #3E3D2E;
 $borderColor: #3E3D2E;
 $buttonColor: #3E3D2E;
-$deleteButtonColor: #3E3D2E;
+$shadowColor: #000000aa;
 
 @mixin flex {
   display: flex;
@@ -18,18 +18,24 @@ $deleteButtonColor: #3E3D2E;
   color: white;
 }
 
+html {
+  overflow: hidden;
+}
 #app {
   @include flex;
   justify-content: center;
   height: 100vh;
-  background-color: $mainBackgroundColor;
+  background: radial-gradient(at 49vh 51vh, $mainBackgroundColor, black);
+  overflow: hidden;
 }
 .to-do-list {
-  @include flex;
+  position: absolute;
+  right: 15%;
   height: 60vh;
   border: 2px solid $borderColor;
   outline: 1px solid $borderColor;
   background-color: $listBackgroundColor;
+  box-shadow: 25px 35px 10px $shadowColor;
 }
 .task-input {
   width: 30vw;
@@ -44,7 +50,6 @@ $deleteButtonColor: #3E3D2E;
 .input-field::placeholder {
   color: white;
 }
-
 .input-button {
   width: 30%;
   height: 100%;
@@ -86,7 +91,6 @@ $deleteButtonColor: #3E3D2E;
   width: 50%;
   height: 100%;
 }
-
 .input-button, .sort-button, .remove-button {
   background-color: $buttonColor;
   cursor: pointer;
@@ -94,3 +98,39 @@ $deleteButtonColor: #3E3D2E;
     filter: brightness(1.2);
   }
 }
+
+.the-sun{
+  animation: rotate 10s linear infinite;
+  width: 28vh;
+  height: 28vh;  
+  top: 35vh;
+  left: 37vh;
+  position: absolute;
+}
+
+
+.js-logo {
+  position: absolute;
+  width: 28vh;
+  height: 28vh;
+  top: 35vh;
+  left: 37vh;
+  z-index: 1;
+}
+.aureole {
+  position: absolute;
+  width: 28vh;
+  height: 28vh;
+  transform: scale(3);
+  animation: aureole 5s ease-in-out infinite;
+}
+@keyframes aureole {
+  0% {transform: scale(2.4);}
+  50% {transform: scale(3);}
+  100% {transform: scale(2.4);}
+}
+@keyframes rotate {
+  0% {transform: rotate(0deg)}
+  100% {transform: rotate(360deg)}
+}
+

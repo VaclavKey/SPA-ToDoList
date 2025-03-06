@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderRoot();
   checkStorage();
+  createSun();
 });
 
 function renderRoot() {
@@ -177,4 +178,22 @@ function sortTasks(order) {
 
   taskList.innerHTML = '';
   renderTasks(tasks);
+}
+
+function createSun() {
+  let Sun = document.createElement('div');
+  let jsLogo = document.createElement('img');
+  let aureole = document.createElement('img');
+
+  jsLogo.src = 'images/JS-logo.png';
+  aureole.src = 'images/aureole.png';
+
+  Sun.classList.add('the-sun');
+  jsLogo.classList.add('js-logo');
+  aureole.classList.add('aureole');
+
+  
+  Sun.appendChild(aureole);
+  document.getElementById('app').appendChild(jsLogo);
+  document.getElementById('app').appendChild(Sun);
 }
