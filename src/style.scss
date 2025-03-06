@@ -1,0 +1,96 @@
+$mainBackgroundColor: #F3E47A;
+$listBackgroundColor: #F0DC4E;
+$taskBackgroundColor: #3E3D2E;
+$borderColor: #3E3D2E;
+$buttonColor: #3E3D2E;
+$deleteButtonColor: #3E3D2E;
+
+@mixin flex {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+#app {
+  @include flex;
+  justify-content: center;
+  height: 100vh;
+  background-color: $mainBackgroundColor;
+}
+.to-do-list {
+  @include flex;
+  height: 60vh;
+  border: 2px solid $borderColor;
+  outline: 1px solid $borderColor;
+  background-color: $listBackgroundColor;
+}
+.task-input {
+  width: 30vw;
+  height: 12%;
+}
+.input-field {
+  width: 70%;
+  height: 100%;
+  text-align: center;
+  background-color: $buttonColor;
+}
+.input-field::placeholder {
+  color: white;
+}
+
+.input-button {
+  width: 30%;
+  height: 100%;
+}
+.tasks-container {
+  width: 100%;
+  height: 80%;
+  padding: 1em;
+  overflow-y: auto;
+  border-top: 2px solid $borderColor;
+  border-bottom: 2px solid $borderColor;
+}
+.task-list {
+  @include flex;
+  gap: 1em;
+}
+.task {
+  @include flex;
+  flex-direction: row;
+  width: 100%;
+  height: 3rem;
+  box-shadow: inset -2px -2px $borderColor, inset 2px 2px $borderColor, inset -4px -4px gray, inset 4px 4px black;
+  background-color: $taskBackgroundColor;
+}
+.description {
+  width: 90%;
+  margin-left: 0.5em;
+  font-size: 1.5em;
+}
+.remove-button {
+  width: 3rem;
+  height: 100%;
+}
+.task-sort-buttons {
+  width: 100%;
+  height: 8%;
+}
+.sort-button {
+  width: 50%;
+  height: 100%;
+}
+
+.input-button, .sort-button, .remove-button {
+  background-color: $buttonColor;
+  cursor: pointer;
+  &:hover {
+    filter: brightness(1.2);
+  }
+}

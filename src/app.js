@@ -42,6 +42,8 @@ function renderRoot() {
   inputButton.textContent = 'Add';
 
   // Tasks container
+  let tasksContainer = document.createElement('div');
+  tasksContainer.classList.add('tasks-container');
   let taskList = document.createElement('ul');
   taskList.classList.add('task-list');
   taskList.setAttribute('id', 'task-list');
@@ -72,13 +74,16 @@ function renderRoot() {
   taskInput.appendChild(inputField);
   taskInput.appendChild(inputButton)
 
+  // Composing task-list
+  tasksContainer.appendChild(taskList);
+
   // Composing sort
   taskSortButtons.appendChild(sortButtonNew);
   taskSortButtons.appendChild(sortButtonOld);
 
   // Composing to-do list
   toDoList.appendChild(taskInput);
-  toDoList.appendChild(taskList);
+  toDoList.appendChild(tasksContainer);
   toDoList.appendChild(taskSortButtons);
 
   // Composing whole document
@@ -111,6 +116,7 @@ function createTask(desc) {
   // Creating button to delete task
   let removeButton = document.createElement('button');
   removeButton.classList.add('remove-button');
+  removeButton.textContent = 'X';
   removeButton.addEventListener('click', function () { 
     removeTask(this) 
   });
