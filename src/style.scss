@@ -145,6 +145,9 @@ html {
 }
 
 @media screen and (max-width: 1280px) {
+  .input-field, .input-button, .description, .remove-button, .sort-button {
+    font-size: 1.2em;
+  }
   .the-sun, .js-logo {
     left: calc(50% - 14vh)
   }
